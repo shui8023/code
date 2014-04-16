@@ -64,7 +64,6 @@ void list_bulit_tail(struct list *new, struct list *head)
  *
  *
  */
-#define LIST_TRAVERSAL(head, type, value) 	\
 		
 
 #endif
