@@ -55,15 +55,17 @@ void list_bulit_head(struct list *new, struct list *head)
 	list_built(new, head, head->next);
 }
 
+
 void list_bulit_tail(struct list *new, struct list *head)
 {
 	list_built(new, head->priv, head);
 }
 
+
 /*@linked list traversal
  *
  *
  */
-		
+#define 		
 
 #endif
