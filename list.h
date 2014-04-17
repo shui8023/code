@@ -42,7 +42,9 @@ struct list{
  *@
  *
  */
-void list_built(struct list *new, struct list *next, struct list *priv)
+void list_built(struct list *new, 
+			struct list *next, 
+			struct list *priv)
 {
 	new->next = next;
 	next->priv = new;
@@ -66,6 +68,16 @@ void list_bulit_tail(struct list *new, struct list *head)
  *
  *
  */
-#define 		
+#define LIST_ENTRY(ptr, type, number) ({ 	\
+			const typeof(((type *)0)->number) *point = ptr;  	\
+			(type *)((char *)point - ((unsigned int )&((typed *)0)->number));})	
+
+#define list_for_echo(pos, head) 	\
+		for (pos = head->next; pos != head; pos = pos=->next)
+
+/*@list delete
+ *
+ *
+ */
 
 #endif
