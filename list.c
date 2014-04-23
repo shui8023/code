@@ -37,12 +37,18 @@ typedef struct student_message{
 int list_use()
 int main(int argc, char *argv[])
 {
-	st_mes  student;
-	
+	st_mes  *student, *p;
+	struct list top;
+
 	student = (st_mes *)malloc(sizeof(st_mes));
 	student.name = (char *)malloc(6);
 	student.collage = (char *)malloc(10);
+	top.next = 
+	scanf("%s %ld %s %c %d", name, &number, collage, &sex, &year);
 
+	while (getchar() != EOF) {
+		
+	}
 	return EXIT_SUCCESS;
 }
 
