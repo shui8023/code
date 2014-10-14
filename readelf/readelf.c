@@ -26,6 +26,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/mman.h>
+
 
 static const char *
 get_elf_class(unsigned int elf_class)
@@ -112,7 +114,8 @@ get_machine_name (unsigned int machine)
 int main(int argc, char *argv[])
 {
 	int fd;
-	char buffer[128];
+	char buffer[12800];
+	char str_buffer[1024];
 	int number;
 	struct elf *elf;
 	struct elf_section *elf_sh;
@@ -121,8 +124,8 @@ int main(int argc, char *argv[])
 	if ((fd = open("a.out", O_RDONLY, 0644)) == -1) {
 		printf("error\n");
 	}
-	
-	number = read(fd, buffer, 52);
+
+	number = read(fd, buffer, sizeof(struct elf));
 	elf = (struct elf *)buffer;
 	printf("ELF Header:\n");
 	printf("  Magic:   ");
@@ -148,16 +151,27 @@ int main(int argc, char *argv[])
 	printf("  Size of section headers:          %d (byte into file)\n", elf->e_shentsize);
 	printf("  Number of section headers:        %d \n", elf->e_shnum);
 	printf("  Section header string table index:        %d \n", elf->e_shstrndx);
+	int count = elf->e_shnum;
+	int str_table = elf->e_shstrndx;
+	lseek(fd, elf->e_shoff - sizeof(struct elf), SEEK_CUR);
+	
+	number = read(fd, buffer, sizeof(struct elf_section) * count);
+	elf_sh = (struct elf_section *)buffer;
+	struct elf_section *sh_str_table = &elf_sh[str_table];
+	lseek(fd, sh_str_table->sh_offset, SEEK_SET);
 
-	lseek(fd, elf->e_shoff + (elf->e_shentsize * elf->e_shstrndx), SEEK_SET);
+	number = read(fd, str_buffer, sizeof(str_buffer));
 
-	for (i = 0; i < elf->e_phnum; ++i) {
-		number = read(fd, buffer, sizeof(elf_sh));
-		elf_sh = (struct elf_section *)buffer;
-		printf("%s\n", elf_sh->sh_name);
+	const char *const sh_str_p = str_buffer;
+	printf("[Nr] Name\t\tType\t\tAddr\tOff\tSize\tEs  Flg  Lk  Inf  Al\n");
+	for (i = 0; i < count; ++i) {
+		printf("[%d] %-16s\t\t%-16d\t\t%-08x\t%-06d\t%-06d\t%02d  %d  %d  %d  %d\n",i,
+					((sh_str_p + elf_sh[i].sh_name) == '\0')? "NULL":sh_str_p + elf_sh[i].sh_name,
+					elf_sh[i].sh_type,elf_sh[i].sh_addr, elf_sh[i].sh_offset,
+					elf_sh[i].sh_size, elf_sh[i].sh_entsize, elf_sh[i].sh_flags,
+					elf_sh[i].sh_link, elf_sh[i].sh_info, elf_sh[i].sh_addralign);
 	}
+	
 	close(fd);
-
-
 	return EXIT_SUCCESS;
 }
