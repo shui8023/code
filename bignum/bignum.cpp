@@ -20,6 +20,7 @@
 #include <string>
 #include <stdlib.h>
 #include <stdio.h>
+#include <algorithm>
 
 #define MAX_NUM 200
 
@@ -30,20 +31,43 @@ class bignum
 private:
 	int data[MAX_NUM];
 	int length;
+	int sign;
 public:
 	bignum();
 	bignum(int a[], int length);
+	void read_int(string str);
 	void print();
 	bignum operator +(bignum p);
 	bignum operator -(bignum p);
 //	bignum operator *(bignum p);
 //	bignum operator /(bignum p);
 };
+void bignum::read_int(string str)
+{
+	int count = str.size();
+	int i = 0;
+	sign = 0; //0是正数
+	
+	if (str[0] == '-') {
+		sign = -1;
+	}
+	
+	for (i = 0; i < count - 1; ++i) {
+		this->data[i] = str[i] - '0';
+	}
 
+	reverse(data, data+count);
+	length = count;
+	if (sign == -1) {
+		length = length - 1;	
+	}
+
+}
 bignum::bignum()
 {
 	memset(data, 0, MAX_NUM);
 	length = 0;
+	sign = 0;
 }
 
 bignum::bignum(int a[], int len)
@@ -65,6 +89,19 @@ void bignum::print()
 	}
 	cout << endl;
 }
+istream &operator >>(istream &in, bignum big)
+{
+	string str;
+	in >> str;
+	big.read_int(str);
+	return in;
+}
+
+ostream &operator <<(ostream &os, bignum big)
+{
+	big.print();
+	return os;
+}
 bignum bignum::operator+(bignum p)
 {
 	int tmp = 0;
@@ -84,6 +121,7 @@ bignum bignum::operator+(bignum p)
 	
 	return *this;
 }
+
 bignum bignum::operator -(bignum p)
 {
 	if (length > p.length) {
@@ -99,6 +137,7 @@ int main(int argc, char *argv[])
 	
 	int num_count1 = str1.size();
 	int num_count2 = str2.size();
+
 	int num1[MAX_NUM];
 	int num2[MAX_NUM];
 	
@@ -120,6 +159,18 @@ int main(int argc, char *argv[])
 //	big_num3 = big_num1.operator+(&big_num2);
 	big_num3 = big_num1 + big_num2;
 	big_num3.print();
+}
+
+#endif 
+#ifdef BUG
+int main(int argc, char *argv[])
+{
+	bignum num1, num2, num3;
+
+	cin >> num1 >> num2;
+	num3 = num1 + num2;
+	cout << num3;
+	return 0;
 }
 
 #endif
