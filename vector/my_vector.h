@@ -60,7 +60,16 @@ my_vector::my_vector(const my_vector &tmp)
 	len = tmp.len;
 	size = tmp.size;
 }
-T &operator [](int index);
-const my_vector &push_back(const T tmp);
-int getsize();
+T &operator [](int index)
+{
+	return data[index];
+}
+const my_vector &push_back(const T tmp)
+{
+	
+}
+int getsize()
+{
+	
+}
 #endif //MY_VECTOR_H

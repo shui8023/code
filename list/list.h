@@ -25,10 +25,12 @@ struct list_head {
 	list_head *prev;
 }list_head;
 
+//初始化头部
 #define LIST_HEAD(head) 	\
 	head = {&head, &head}
 #define LIST_HEAD_INIT(name) 	\
-	struct list_head name = LIST_HEAD
+	struct list_head name = LIST_HEAD(name)
 
+void list_link()
 #endif //LIST_H
 
