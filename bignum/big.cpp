@@ -20,7 +20,7 @@
 #include <assert.h>
 #include <string>
 #include <cstring>
-const int max_count = 300;
+const int max_count = 3000;
 
 using namespace std;
 
@@ -45,7 +45,7 @@ public:
 };
 big_num::big_num()
 {
-	memset(data, 0, sizeof(data));
+	memset(data, 0, max_count);
 	length = 0;
 	sign = true;
 }
@@ -58,7 +58,7 @@ big_num big_num::operator<<(int count)const
 		c[i + count] = data[i];
 	}
 	//debug
-	c.length += length + count;
+	c.length = length + count;
 
 	return c;
 }
@@ -129,7 +129,7 @@ big_num big_num::operator-(const big_num &p) const
 		c.length++;
 	}
 
-	while (c.length > 1 && c[length - 1] == 0) {
+	while (c.length > 0 && c[c.length - 1] == 0) {
 		c.length--;
 	}
 
@@ -162,12 +162,39 @@ big_num big_num::operator*(const big_num &p)const
 	return c;
 }
 
+big_num big_num::operator/(const big_num &p) const
+{
+	if (*this < p) {
+		big_num c;
+		c.length = 1;
+		return c;
+	}
+
+	big_num c, tmp = *this;
+	
+	c.length = length - p.length + 1;
+	
+	for (int i = length - p.length; i >= 0; --i) {
+		big_num s = (p << i);
+		while (!(tmp < s)) {
+			tmp = tmp - s;
+			c[i]++;
+		}
+
+	}
+
+	while (c.length > 0 && c[c.length - 1] == 0) {
+		c.length--;
+	}
+
+	return c;
+}
 void big_num::init_big_num()
 {
 	string str;
 	
 	cin >> str;
-
+	memset(data, 0, max_count);
 	length = str.size();
 	
 	for (int i = 0; i < length; ++i) {
@@ -192,16 +219,18 @@ void big_num::print()
 int main(int argc, char *argv[])
 {
 	big_num a, b, c;
-	char p;
-
-	a.init_big_num();
-	cin >>p;
-	b.init_big_num();
-	
+	char p; 
+	while (true) {
+		a.init_big_num();
+//	cin >>p;
+		b.init_big_num();
+		c = a / b;
+		c.print();
+	}
+#if 0
 	if (p == '+') {
 		c = a + b;
 	}
-
 	if (p == '-') {
 		c = a - b;
 	}
@@ -209,6 +238,9 @@ int main(int argc, char *argv[])
 	if (p == '*') {
 		c = a * b;
 	}
-
-	c.print();
+	
+	if (p == '/') {
+		c = a / b;
+	}
+#endif
 }
