@@ -25,11 +25,10 @@ const int max_count = 3000;
 using namespace std;
 
 class big_num{
-private:
+public:
 	int data[max_count];
 	int length;
 	bool sign;
-public:
 	big_num();
 	big_num operator+(const big_num &p)const;
 	big_num operator-(const big_num &p)const;
@@ -49,6 +48,35 @@ big_num::big_num()
 	length = 0;
 	sign = true;
 }
+//参数不能定义为const，因为要赋值,没有使用引用，导致错误
+ istream &operator>>(istream &in,  big_num &p)
+{
+	string str;
+	in >> str;
+	int size = str.size();
+	p.length = size;
+	memset(p.data, 0, max_count);
+
+	for (int i = 0; i < size; ++i){
+		p.data[size - 1 - i] = str[i] - '0';
+	}
+
+	return in;
+}
+
+ostream &operator <<(ostream &out, const big_num &p)
+{
+	if (!p.sign) {
+		cout << '-';
+	}
+	for (int i = 0; i < p.length; ++i){
+		out << p.data[i];
+	}
+	out << endl;
+
+	return out;
+}
+
 big_num big_num::operator<<(int count)const
 {
 	int tmp;
@@ -220,13 +248,33 @@ int main(int argc, char *argv[])
 {
 	big_num a, b, c;
 	char p; 
-	while (true) {
-		a.init_big_num();
-//	cin >>p;
-		b.init_big_num();
-		c = a / b;
-		c.print();
+	
+	while (cin >> a >> p >> b) {
+		
+		if (p == '+') {
+			c = a + b;
+		}
+		if (p == '-') {
+			c = a - b;
+		}
+		
+		if (p == '*') {
+			c = a * b;
+		}
+		
+		if (p == '/') {
+			c = a / b;
+		}
+		cout << c;		
 	}
+
+//	while (true) {
+//		a.init_big_num();
+//	cin >>p;
+//		b.init_big_num();
+//		c = a / b;
+//		c.print();
+//	}
 #if 0
 	if (p == '+') {
 		c = a + b;
