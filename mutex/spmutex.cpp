@@ -32,7 +32,7 @@ using namespace std;
 vector<int> contain(0,10);
 static int ptr = 0;
 
-void thread_work(void *n)
+void *thread_work(void *n)
 {
 	if (ptr == 0) {
 		int i = 0;
@@ -40,15 +40,19 @@ void thread_work(void *n)
 			contain.push_back(i);
 		}
 	}
+
+	return NULL;
 }
-void thread_work(void *n)
+void *thread_work1(void *n)
 {
 	if (ptr == 0) {
-		return ;
+		return NULL;
 	}
 
 	cout << contain[0] << endl;
 	ptr -= 1;
+
+	return NULL;
 }
 int main(int argc, char *argv[])
 {
@@ -56,5 +60,7 @@ int main(int argc, char *argv[])
 	
 	pthread_create(pid, NULL, thread_work, NULL);
 	pthread_create(pid + 1, NULL, thread_work1, NULL);
+
+	while (1);
 	return 0;
 }

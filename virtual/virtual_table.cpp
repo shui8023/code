@@ -26,11 +26,6 @@ class test1
 	public:
 		int value;
 		virtual void print() = 0;
-		virtual void print1() = 0;
-		virtual void print2() = 0;
-		virtual void print3() = 0;
-		virtual void print4() = 0;
-		virtual void print5() = 0;
 };
 class test2:public test1
 {

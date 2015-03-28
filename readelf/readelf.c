@@ -233,10 +233,10 @@ get_program_header (char *filename, struct elf *elf)
 int main(int argc, char *argv[])
 {
 	struct elf *elf;
-	get_elf_header("a.out");
-	elf = get_elf_section_strtable("a.out");
-	get_elf_section(elf, "a.out");
-	get_program_header("a.out", elf);
+	get_elf_header("drock");
+	elf = get_elf_section_strtable("drock");
+	get_elf_section(elf, "drock");
+	get_program_header("drock", elf);
 	return EXIT_SUCCESS;
 }
 
